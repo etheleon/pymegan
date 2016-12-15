@@ -87,7 +87,7 @@ class io:
                     if self.verbose:
                         sys.stderr.write("%s rank is not available for read: %s\n" % (rank, indiv))
         for taxa in taxahash:
-            line = "tax\t%s\t%s" % (taxa,taxahash[taxa])
+            line = "TAX\t%s\t%s" % (taxa,taxahash[taxa])
             fh.write(line + "\n")
         print("%s taxa sumamrised"% len(taxahash))
 
