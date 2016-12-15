@@ -91,6 +91,10 @@ lcaparser.singleComparison()
 
 We count reads which have the same taxons and KOs annotations
 
+```python
+lcaparser.combined()
+```
+
 ```
 phylum  67820   K00000  4
 phylum  1224    K06937  1
@@ -117,6 +121,3 @@ species 1262919 K03800  1
 species 1262919 K00000  529
 ```
 
-```python
-lcaparser.combined()
-```
