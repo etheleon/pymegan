@@ -2,9 +2,11 @@
 
 import datetime
 from collections import defaultdict
+import sys
 
 class io:
-    def __init__ (self, totalReads, rootDir, sampleName, sampleDir, readInfo, outputFile):
+    def __init__ (self, totalReads, rootDir, sampleName, sampleDir, readInfo, outputFile, verbose):
+        self.verbose = verbose
         self.root = rootDir
         self.outfile = outputFile
         self.readInfo = readInfo
@@ -58,7 +60,8 @@ class io:
                         ko      = self.readInfo[indiv]['ko']
                         rankDict[taxa][ko] +=1
                     except KeyError:
-                        print("rank is not available")
+                        if self.verbose:
+                            sys.stderr.write("%s rank is not available for read: %s\n" % (rank, indiv))
                 for taxon in rankDict:
                     for ko in rankDict[taxon]:
                         outfile.write("%s\t%s\tK%s\t%s\n" % (translate[rank], taxon, ko, rankDict[taxon][ko]))
@@ -80,7 +83,8 @@ class io:
                     taxa = self.readInfo[indiv]['taxa'][rank]
                     taxahash[taxa] +=1
                 except KeyError:
-                    print("rank is not available")
+                    if self.verbose:
+                        sys.stderr.write("%s rank is not available for read: %s\n" % (rank, indiv))
         for taxa in taxahash:
             line = "tax\t%s\t%s" % (taxa,taxahash[taxa])
             fh.write(line + "\n")

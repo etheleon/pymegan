@@ -2,7 +2,39 @@
 
 this is a collection of python classes for dealing with MEGAN6 UE’s blast2lca outputs
 
-## Initialize
+## Usage
+
+```
+usage: parseMEGAN.py [-h] root sampledir sample taxonomy kegg
+
+Command line tool for processing blast2lca outputs
+
+positional arguments:
+  root        the root directory
+  sampledir   path to sample directory
+  sample      sample name
+  taxonomy    blast2lca tax output - has to be in taxIDs d__2
+  kegg        blast2lca ko output filename
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --verbose   to switch on verbose mode
+```
+
+Accepts `.bz2` files
+
+```
+#example
+./parseMEGAN.py $PWD \ 
+                tests/trimmed/NUSM01AD00_M01_1_Day0 \
+                NUSM01AD00_M01_1_Day0 \
+                taxoutput.bz2 \
+                KOoutput.bz2
+```
+
+## Incorporating python class into your python script
+
+### Initialize
 
 ```python
 from MEGAN.process import Parser
@@ -15,9 +47,9 @@ lcaparser = Parser(
 )
 ```
 
-## Input files
+### Input files
 
-### KEGG
+#### KEGG
 ```
 HISEQ:327:HN35KBCXX:2:2216:17590:101139/2; ; [1] K16363: 100 # 1
 HISEQ:327:HN35KBCXX:2:2216:17505:101147/2; ;
@@ -31,7 +63,7 @@ HISEQ:327:HN35KBCXX:2:2216:20417:101000/2; ; [1] K02837: 100 # 1
 HISEQ:327:HN35KBCXX:2:2216:20656:101185/2; ;
 ```
 
-### Taxonomy
+#### Taxonomy
 
 ```
 HISEQ:327:HN35KBCXX:2:1101:17405:2046/1; ;d__2; 100;p__976; 100;c__200643; 100;o__171549; 100;f__171552; 80;g__838; 80;s__1262917; 20;
@@ -47,7 +79,7 @@ HISEQ:327:HN35KBCXX:2:1101:7035:5916/1; ;d__2; 100;p__976; 100;c__200643; 100;o_
 ```
 
 
-## `.megan` summary format
+### `.megan` summary format
 
 
 
@@ -55,7 +87,7 @@ HISEQ:327:HN35KBCXX:2:1101:7035:5916/1; ;d__2; 100;p__976; 100;c__200643; 100;o_
 lcaparser.singleComparison()
 ```
 
-## Combined format
+### Combined format
 
 We count reads which have the same taxons and KOs annotations
 
@@ -71,6 +103,7 @@ phylum  1224    K02674  1
 phylum  1224    K06694  1
 phylum  1224    K01785  12
 ...
+
 ...
 species 1262910 K00033  1
 species 1262911 K00000  525

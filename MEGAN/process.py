@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import re
+import bz2
 from collections import deque, defaultdict
 
 from printing import io
@@ -17,8 +18,9 @@ class Parser:
         HISEQ:327:HN35KBCXX:2:1101:16768:6954/1; ; [1] K04079: 100 # 1
     """
 
-    def __init__ (self, rootPath, sampleDir, sampleName, kofile, taxfile):
+    def __init__ (self, rootPath, sampleDir, sampleName, kofile, taxfile, verbose):
         #sample details
+        self.verbose = verbose
         self.rootPath   = rootPath
         self.sampleName = sampleName
         self.sampleDir = sampleDir
@@ -47,7 +49,8 @@ class Parser:
             self.sampleName,
             self.sampleDir,
             self.reads,
-            self.outputFile
+            self.outputFile,
+            self.verbose
         )
         summary.printMeganSummary()
 
@@ -64,7 +67,8 @@ class Parser:
             self.sampleName,
             self.sampleDir,
             self.reads,
-            self.outputFile
+            self.outputFile,
+            self.io
         )
         summary.printCombinedAnalysis()
 
@@ -75,7 +79,12 @@ class Parser:
         """
         print("Processing KOs....")
         totalReads = 0
-        with open(self.kofile, 'r') as koFile:
+        isBZ = bool(re.search(".bz2$", self.kofile))
+        if isBZ:
+            fh = bz2.BZ2File(self.kofile)
+        else:
+            fh = open(self.kofile, 'r')
+        with fh as koFile:
             for line in koFile:
                 totalReads += 1
                 elements = deque(line.split(";"))
@@ -98,7 +107,12 @@ class Parser:
         """
         print("Processing TAXA....")
         totalReads = 0
-        with open(self.taxfile, 'r') as taxFile:
+        isBZ = bool(re.search(".bz2$", self.kofile))
+        if isBZ:
+            fh = bz2.BZ2File(self.taxfile)
+        else:
+            fh = open(self.taxfile, 'r')
+        with fh as taxFile:
             for line in taxFile:
                 phylahash = {}
                 totalReads +=1
