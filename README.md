@@ -5,15 +5,15 @@ this is a collection of python classes for dealing with MEGAN6 UE’s blast2lca 
 ## Usage
 
 ```
-usage: parseMEGAN.py [-h] root sampledir sample taxonomy kegg
+usage: parseMEGAN.py [-h] [--verbose] root sampledir sample taxonomy kegg
 
 Command line tool for processing blast2lca outputs
 
 positional arguments:
   root        the root directory
-  sampledir   path to sample directory
-  sample      sample name
-  taxonomy    blast2lca tax output - has to be in taxIDs d__2
+  sampledir   relative path from root directory to sample directory
+  sample      sample name, could be same name as sample directory
+  taxonomy    blast2lca taxonomy output filename - has to be in taxIDs d__2
   kegg        blast2lca ko output filename
 
 optional arguments:
