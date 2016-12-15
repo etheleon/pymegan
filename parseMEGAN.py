@@ -36,5 +36,5 @@ args = parser.parse_args()
 
 lcaparser = Parser(args.rootDir, args.sampleDir, args.sampleName, args.ko, args.tax, args.verbose)
 
-lcaparser.singleComparison()
+#lcaparser.singleComparison()
 lcaparser.combined()

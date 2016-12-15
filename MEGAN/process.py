@@ -68,7 +68,7 @@ class Parser:
             self.sampleDir,
             self.reads,
             self.outputFile,
-            self.io
+            self.verbose
         )
         summary.printCombinedAnalysis()
 

@@ -27,7 +27,6 @@ class io:
                 ('@ColorTable'      , 'Fews8   White-Green'),
                 ('@ColorEdits'      , ''),
             ]
-        self.singleEnding = "END_OF_DATA_TABLE\n #SampleID       @Source\n %s.daa      %s/%s.daa\n" % (sampleName, sampleDir, sampleName)
 
     def printMeganSummary(self):
         print("Writing .megan summary file to output: %s" % self.outfile)
@@ -40,7 +39,9 @@ class io:
             self.__summariseTaxa(outfile)
             print("Printing KO summary...")
             self.__summariseKO(outfile)
-            outfile.write(self.singleEnding + "\n")
+            outfile.write("END_OF_DATA_TABLE\n")
+            outfile.write("#SampleID       @Source\n")
+            outfile.write("%s.daa      %s/%s.daa\n" % (sampleName, sampleDir, sampleName))
 
     def printCombinedAnalysis(self):
         translate = {
