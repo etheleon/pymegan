@@ -6,10 +6,12 @@ import sys
 
 class io:
     def __init__ (self, totalReads, rootDir, sampleName, sampleDir, readInfo, outputFile, verbose):
-        self.verbose = verbose
-        self.root = rootDir
-        self.outfile = outputFile
-        self.readInfo = readInfo
+        self.verbose    = verbose
+        self.root       = rootDir
+        self.outfile    = outputFile
+        self.readInfo   = readInfo
+        self.sampleName = sampleName
+        self.sampleDir  = sampleDir
         self.heading = [
                 ('@Creator'         , 'blast2lca2megansummary'),
                 ('@CreationDate'    , datetime.datetime.utcnow().strftime("%a %b %d %H:%M:%S UTC %Y")),
@@ -41,7 +43,7 @@ class io:
             self.__summariseKO(outfile)
             outfile.write("END_OF_DATA_TABLE\n")
             outfile.write("#SampleID       @Source\n")
-            outfile.write("%s.daa      %s/%s.daa\n" % (sampleName, sampleDir, sampleName))
+            outfile.write("%s.daa      %s/%s.daa\n" % (self.sampleName, self.sampleDir, self.sampleName))
 
     def printCombinedAnalysis(self):
         translate = {
