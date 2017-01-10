@@ -106,6 +106,8 @@ class Parser:
         HISEQ:327:HN35KBCXX:2:1101:17405:2046/1; ;d__2; 100;p__976; 100;c__200643; 100;o__171549; 100;f__171552; 80;g__838; 80;s__1262917; 20;
         """
         print("Processing TAXA....")
+        print("Only storing the following taxonomic ranks: Domain, Phylum, Class, Order, Family, Genus, Species")
+        ranks = ['d', 'p', 'c', 'o', 'f', 'g', 's']
         totalReads = 0
         isBZ = bool(re.search(".bz2$", self.kofile))
         if isBZ:
@@ -115,27 +117,31 @@ class Parser:
         with fh as taxFile:
             for line in taxFile:
                 phylahash = {}
-                totalReads +=1
+                totalReads += 1
                 elements    = deque(line.split(";"))
                 readID      = elements.popleft()
                 elements.popleft()
+                for rank in ranks:
+                    phylahash[rank] = 0 #default as unclassified
                 while elements:
                     try:
-                        if len(elements) == 1 :
-                            break
-                        #what is the case?
-                        else:
+                        hasAssignment = len(elements) != 1
+                        if hasAssignment:
                             try:
                                 assignment = elements.popleft()
                                 rank, taxa = assignment.split("__")
                                 score = int(elements.popleft())
                                 if score < 50 :
-                                    break
+                                    break #same, shouldn't break here, I should continue to assign but assign as unclassified
                                 else:
-                                    phylahash[rank] = taxa
-                                    self.taxonomyhash[taxa] += 1
+                                    if rank in ranks:
+                                        phylahash[rank] = taxa
+                                        self.taxonomyhash[taxa] += 1
                             except TypeError:
                                 print("this is the assignment : %s" % assignment)
+                        else:
+                            break
+
                     except IndexError:
                         break
                 self.reads[readID]['taxa'] = phylahash
