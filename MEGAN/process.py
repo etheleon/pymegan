@@ -137,8 +137,8 @@ class Parser:
                                     if rank in ranks:
                                         phylahash[rank] = taxa
                                         self.taxonomyhash[taxa] += 1
-                            except TypeError:
-                                print("this is the assignment : %s" % assignment)
+                            except (TypeError, ValueError) as err:
+                                print("%s: this is the errorneous entry: %s" % (err, assignment))
                         else:
                             break
 
