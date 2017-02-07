@@ -49,6 +49,8 @@ lcaparser = Parser(
 
 ### Input files
 
+__NOTE__: The readID itself should not include any semi-colon character, if there is please remove it before running the parser.
+
 #### KEGG
 ```
 HISEQ:327:HN35KBCXX:2:2216:17590:101139/2; ; [1] K16363: 100 # 1
