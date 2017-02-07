@@ -109,7 +109,7 @@ class Parser:
         print("Only storing the following taxonomic ranks: Domain, Phylum, Class, Order, Family, Genus, Species")
         ranks = ['d', 'p', 'c', 'o', 'f', 'g', 's']
         totalReads = 0
-        isBZ = bool(re.search(".bz2$", self.kofile))
+        isBZ = bool(re.search(".bz2$", self.taxfile))
         if isBZ:
             fh = bz2.BZ2File(self.taxfile)
         else:
