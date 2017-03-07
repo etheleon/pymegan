@@ -4,7 +4,7 @@ this is a collection of python classes for dealing with MEGAN6 UE’s blast2lca 
 
 ## Usage
 
-#goes from DAA 2 combined output
+First script processes a meganised DAA directly to the combined output (see below: Combined Format)
 
 ```
 usage: fullPipeline [-h] [--blast2lcaJAR JAR] [--gi2kegg GI2KEGG]
