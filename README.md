@@ -47,6 +47,16 @@ lcaparser = Parser(
 )
 ```
 
+### Directory structure
+
+```
+/root/directory
+└── sampleDirectory/
+     ├── KOoutput
+     ├── taxoutput
+     └── sample.daa
+```
+
 ### Input files
 
 __NOTE__: The readID itself should not include any semi-colon character, if there is please remove it before running the parser.

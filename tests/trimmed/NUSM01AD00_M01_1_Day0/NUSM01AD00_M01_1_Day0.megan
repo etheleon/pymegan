@@ -1,5 +1,5 @@
 @Creator	blast2lca2megansummary
-@CreationDate	Thu Dec 15 07:14:50 UTC 2016
+@CreationDate	Tue Feb 07 07:26:45 UTC 2017
 @ContentType	Summary4
 @Names	NUSM01AD00_M01_1_Day0
 @BlastMode	BlastX
@@ -13,6 +13,7 @@
 @NodeStyle	Taxonomy        Circle
 @ColorTable	Fews8   White-Green
 @ColorEdits	
+TAX	0	4928425
 TAX	477976	5
 TAX	180162	8
 TAX	89373	2280
@@ -9587,5 +9588,4 @@ KEGG	03189	7
 KEGG	00655	408
 END_OF_DATA_TABLE
 #SampleID       @Source
-NUSM01AD00_M01_1_Day0.daa      tests/trimmed/NUSM01AD00_M01_1_Day0/NUSM01AD00_M01_1_Day0.daa
-
+NUSM01AD00_M01_1_Day0.daa      ./tests/trimmed/NUSM01AD00_M01_1_Day0/NUSM01AD00_M01_1_Day0.daa

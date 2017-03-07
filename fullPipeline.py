@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+
+from MEGAN.blast2lca import Blast2lca
+from MEGAN.process import Parser
+import argparse
+#import fire
+
+class DAA2combined:
+	def __init__(self, rootDir, sampleDir, sampleName, daa, taxOutput, koOutput, debug = False):
+		self.rootDir = rootDir
+		self.sampleDir = sampleDir
+		self.sampleName = sampleName
+		self.daa = daa
+		self.taxOutput = taxOutput
+		self.koOutput = koOutput
+		self.debug = debug
+	def run(self):
+		b2l = Blast2lca()
+		b2l.run(self.rootDir, self.sampleDir, self.daa, self.taxOutput, self.koOutput, self.debug)
+		if self.debug:
+			None
+		else:
+			lcaparser = Parser(self.rootDir, self.sampleDir, self.sampleName, self.koOutput, self.taxOutput, True)
+			lcaparser.combined()
+
+if __name__ == '__main__':
+	parser = argparse.ArgumentParser(description='Command line wrapper of blast2lca and merging annotations')
+
+	parser.add_argument('rootDir', metavar='root', type=str,
+						help="the root directory")
+
+	parser.add_argument('sampleDir', metavar='sampledir', type=str,
+						help="relative path from root directory to sample directory")
+
+	parser.add_argument('sampleName', metavar='sample', type=str,
+						help="sample name, could be same name as sample directory. for combined ko and taxon")
+
+	parser.add_argument('DAA', metavar='DAA file', type=str,
+						help="DAA filename")
+
+	parser.add_argument('tax', metavar='taxonomy', type=str,
+						help='blast2lca taxonomy output filename - has to be in taxIDs d__2')
+
+	parser.add_argument('ko', metavar='kegg', type=str,
+						help='blast2lca ko output filename')
+	parser.add_argument('--debug', dest='debug', action='store_true',
+						help='debug mode')
+	parser.add_argument('--verbose', dest='verbose', action='store_true',
+						help='to switch on verbose mode')
+	args = parser.parse_args()
+	print(args.debug)
+	d2c = DAA2combined(args.rootDir, args.sampleDir, args.sampleName, args.DAA, args.tax, args.ko, args.debug)
+	d2c.run()
+
