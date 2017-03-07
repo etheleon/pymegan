@@ -47,11 +47,11 @@ if __name__ == '__main__':
 	parser.add_argument('ko', metavar='kegg', type=str,
 						help='blast2lca ko output filename')
 	parser.add_argument('--blast2lcaJAR', dest='jar', default='/export2/home/uesu/local/megan6/tools/blast2lca',
-						help='debug mode')
+						help='blast2lca jar file')
 	parser.add_argument('--gi2kegg', dest='gi2kegg', default='/export2/home/uesu/local/megan6/tools/kegg/gi2kegg.map',
-						help='debug mode')
+						help='gi2kegg mapping file')
 	parser.add_argument('--gi2taxid', dest='gi2taxid', default='/export2/home/uesu/simulation_fr_the_beginning/data/classifier/gi2taxid.refseq.map',
-						help='debug mode')
+						help='gi2taxid mapping file')
 	parser.add_argument('--debug', dest='debug', action='store_true',
 						help='debug mode')
 	parser.add_argument('--verbose', dest='verbose', action='store_true',

@@ -7,24 +7,29 @@ this is a collection of python classes for dealing with MEGAN6 UE’s blast2lca 
 #goes from DAA 2 combined output
 
 ```
-usage: fullPipeline [-h] [--debug] [--verbose]
+usage: fullPipeline [-h] [--blast2lcaJAR JAR] [--gi2kegg GI2KEGG]
+                    [--gi2taxid GI2TAXID] [--debug] [--verbose]
                     root sampledir sample DAA file taxonomy kegg
 
 Command line wrapper of blast2lca and merging annotations
 
 positional arguments:
-  root        the root directory
-  sampledir   relative path from root directory to sample directory
-  sample      sample name, could be same name as sample directory. for
-              combined ko and taxon
-  DAA file    DAA filename
-  taxonomy    blast2lca taxonomy output filename - has to be in taxIDs d__2
-  kegg        blast2lca ko output filename
+  root                 the root directory
+  sampledir            relative path from root directory to sample directory
+  sample               sample name, could be same name as sample directory.
+                       for combined ko and taxon
+  DAA file             DAA filename
+  taxonomy             blast2lca taxonomy output filename - has to be in
+                       taxIDs d__2
+  kegg                 blast2lca ko output filename
 
 optional arguments:
-  -h, --help  show this help message and exit
-  --debug     debug mode
-  --verbose   to switch on verbose mode
+  -h, --help           show this help message and exit
+  --blast2lcaJAR JAR   blast2lca jar file
+  --gi2kegg GI2KEGG    gi2kegg mapping file
+  --gi2taxid GI2TAXID  gi2taxid mapping file
+  --debug              debug mode
+  --verbose            to switch on verbose mode
 ```
 
 Second script just parses the blast2lca output
