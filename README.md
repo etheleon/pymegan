@@ -4,6 +4,31 @@ this is a collection of python classes for dealing with MEGAN6 UE’s blast2lca 
 
 ## Usage
 
+#goes from DAA 2 combined output
+
+```
+usage: fullPipeline [-h] [--debug] [--verbose]
+                    root sampledir sample DAA file taxonomy kegg
+
+Command line wrapper of blast2lca and merging annotations
+
+positional arguments:
+  root        the root directory
+  sampledir   relative path from root directory to sample directory
+  sample      sample name, could be same name as sample directory. for
+              combined ko and taxon
+  DAA file    DAA filename
+  taxonomy    blast2lca taxonomy output filename - has to be in taxIDs d__2
+  kegg        blast2lca ko output filename
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --debug     debug mode
+  --verbose   to switch on verbose mode
+```
+
+Second script just parses the blast2lca output
+
 ```
 usage: parseMEGAN.py [-h] [--verbose] root sampledir sample taxonomy kegg
 

@@ -6,16 +6,19 @@ import argparse
 #import fire
 
 class DAA2combined:
-	def __init__(self, rootDir, sampleDir, sampleName, daa, taxOutput, koOutput, debug = False):
-		self.rootDir = rootDir
-		self.sampleDir = sampleDir
+	def __init__(self, rootDir, sampleDir, sampleName, daa, taxOutput, koOutput, jar, gi2kegg, gi2taxid, debug = False):
+		self.rootDir    = rootDir
+		self.sampleDir  = sampleDir
 		self.sampleName = sampleName
-		self.daa = daa
-		self.taxOutput = taxOutput
-		self.koOutput = koOutput
-		self.debug = debug
+		self.daa        = daa
+		self.taxOutput  = taxOutput
+		self.koOutput   = koOutput
+		self.debug      = debug
+		self.jar = jar
+		self.gi2kegg= gi2kegg
+		self.gi2taxid= gi2taxid
 	def run(self):
-		b2l = Blast2lca()
+		b2l = Blast2lca(self.jar, self.gi2kegg, self.gi2taxid)
 		b2l.run(self.rootDir, self.sampleDir, self.daa, self.taxOutput, self.koOutput, self.debug)
 		if self.debug:
 			None
@@ -43,12 +46,18 @@ if __name__ == '__main__':
 
 	parser.add_argument('ko', metavar='kegg', type=str,
 						help='blast2lca ko output filename')
+	parser.add_argument('--blast2lcaJAR', dest='jar', default='/export2/home/uesu/local/megan6/tools/blast2lca',
+						help='debug mode')
+	parser.add_argument('--gi2kegg', dest='gi2kegg', default='/export2/home/uesu/local/megan6/tools/kegg/gi2kegg.map',
+						help='debug mode')
+	parser.add_argument('--gi2taxid', dest='gi2taxid', default='/export2/home/uesu/simulation_fr_the_beginning/data/classifier/gi2taxid.refseq.map',
+						help='debug mode')
 	parser.add_argument('--debug', dest='debug', action='store_true',
 						help='debug mode')
 	parser.add_argument('--verbose', dest='verbose', action='store_true',
 						help='to switch on verbose mode')
 	args = parser.parse_args()
 	print(args.debug)
-	d2c = DAA2combined(args.rootDir, args.sampleDir, args.sampleName, args.DAA, args.tax, args.ko, args.debug)
+	d2c = DAA2combined(args.rootDir, args.sampleDir, args.sampleName, args.DAA, args.tax, args.ko, args.jar, args.gi2kegg, args.gi2taxid, args.debug)
 	d2c.run()
 
