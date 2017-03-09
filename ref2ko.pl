@@ -23,6 +23,17 @@ open my $unmapped, '>', 'unmapped';
 open my $errorlog, '>', 'errorlog';
 say $errorlog "gi\tNRrefseq";
 
+#check the files exists
+my $linker_gene2gi = "$links_dir".'/genes_ncbi-gi.list.gz';
+my $linker_gene2ko = "$links_dir/genes_ko.list.gz";
+
+my $filesExists = -e $linker_gene2gi && -e $linker_gene2ko;
+
+unless ($filesExists){
+    say STDERR "one of the files dont exist:\n$linker_gene2gi\n$linker_gene2ko";
+    exit;
+}
+
 #gi <- refseq (NR) gi <- NP <- WP
     my @nr = map { if ($_ =~ /\d$/){$_}else{()} }  (split /\n/, `ls ~/db/nr/*`); #not sure whats the reason for reading each one by one
     giRefseq_NR($_) foreach @nr;    #note this only includes Refseq sequences from Bacteria & Archea;
@@ -30,11 +41,11 @@ say $errorlog "gi\tNRrefseq";
     giRefseq_prot($_) foreach split(/\n/, `ls /export2/home/uesu/db/refseq/arch_prot/* | grep -v nonredundant`);
     #note this only includes only Refseq sequences from Bacteria & Archea folder;
 #ko <-> gi
-    parseGeneGI("$links_dir".'/genes_ncbi-gi.list.gz');
+    parseGeneGI($linker_gene2gi);
 #gi<->taxid (only refseq sequences)
     #giTaxon($gi2taxid_vanilla, $gi2taxid_refseq);
 #KO <-> refseq
-    linkRefseq2KO("$links_dir/genes_ko.list.gz", $outputfile);
+    linkRefseq2KO($linker_gene2ko, $outputfile);
 
 ####################################################################################################
 sub giRefseq_NR {
