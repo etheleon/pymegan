@@ -9,12 +9,15 @@ import (
 	"log"
 	"os"
 	"regexp"
+	//"runtime"
 	"strconv"
 	"strings"
+	//"sync"
 )
 
 func giWP(nrpath string) map[int]string {
 	//m(gi) = WP (non-redundant WP)
+	//defer wg.Done()
 	m := make(map[int]string)
 	nr, err := os.Open(nrpath)
 	if err != nil {
@@ -67,6 +70,7 @@ func giWP(nrpath string) map[int]string {
 }
 
 func giKEGG(filepath string) map[int]string {
+	//defer wg.Done()
 	m := make(map[int]string)
 	file, err := os.Open(filepath)
 	if err != nil {
@@ -92,6 +96,7 @@ func giKEGG(filepath string) map[int]string {
 }
 
 func KEGGko(filepath string) map[string]int {
+	//defer wg.Done()
 	m := make(map[string]int)
 	file, err := os.Open(filepath)
 	if err != nil {
@@ -123,20 +128,28 @@ func main() {
 	linker_keggGene2gi := flag.Arg(1)
 	linker_koKeggGene := flag.Arg(2)
 
-	//giWP(nrpath)
+	//runtime.GOMAXPROCS(3)
+	//var wg sync.WaitGroup
+	//wg.Add(2)
+
 	giWP_map := giWP(nrpath)
+	//go giWP(nrpath)
 	giKEGG_map := giKEGG(linker_keggGene2gi)
+	//go giKEGG(linker_keggGene2gi)
 	KEGGko_map := KEGGko(linker_koKeggGene)
+	//go KEGGko(linker_koKeggGene)
+
+	//wg.Wait()
 
 	//Link 3 dicts (ko <- KEGG geneID) <-> (kegggi::KEGG geneID <- gi) <-> (giwp::gi <- WP_refseq)
-	var keggWP_map map[string]string
+	keggWP_map := make(map[string]string)
 
 	for gi, geneID := range giKEGG_map {
 		WP := giWP_map[gi]
 		keggWP_map[geneID] = WP
 	}
 
-	var wpKO_map map[string]int
+	wpKO_map := make(map[string]int)
 
 	for geneID, ko := range KEGGko_map {
 		WP := keggWP_map[geneID]
