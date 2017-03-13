@@ -9,16 +9,15 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"time"
 	//"runtime"
 	"strconv"
 	"strings"
 	//"sync"
 )
 
-func giWP(nrpath string) map[int]string {
-	//m(gi) = WP (non-redundant WP)
-	//defer wg.Done()
-	m := make(map[int]string)
+func giWPGI(nrpath string) map[int]int {
+	m := make(map[int]int)
 	nr, err := os.Open(nrpath)
 	if err != nil {
 		log.Fatal(err)
@@ -32,7 +31,6 @@ func giWP(nrpath string) map[int]string {
 		if err == io.EOF {
 			break
 		}
-		//header := string(line[:1])
 		isHeader, err := regexp.Match(">", line[:1])
 		if err != nil {
 			panic(err)
@@ -44,25 +42,17 @@ func giWP(nrpath string) map[int]string {
 				nrEntry, children := matches[0], matches[1:]
 
 				parent := strings.Split(nrEntry, "|")
-				parentRefSeq := parent[3]
-				giInt, _ := strconv.Atoi(parent[1])
-				//fmt.Println(giInt)
-				//fmt.Println(parentRefSeq)
-				m[giInt] = parentRefSeq
+				refseqGI, _ := strconv.Atoi(parent[1])
+				m[refseqGI] = refseqGI
 				for _, element := range children {
 					results := strings.Split(element, "|")
 					gi, _ := strconv.Atoi(results[1])
-					//childRefSeq := results[3]
-					m[gi] = parentRefSeq
-					//fmt.Printf("%s\t%s\t%s\n", parentRefSeq, gi, childRefSeq)
+					m[gi] = refseqGI
 				}
 			case len(matches) == 1:
 				parent := strings.Split(matches[0], "|")
-				parentRefSeq := parent[3]
-				giInt, _ := strconv.Atoi(parent[1])
-				m[giInt] = parentRefSeq
-				//case len(matches) == 0:
-				//fmt.Println(matches)
+				refseqGI, _ := strconv.Atoi(parent[1])
+				m[refseqGI] = refseqGI
 			}
 		}
 	}
@@ -85,10 +75,8 @@ func giKEGG(filepath string) map[int]string {
 		if err == io.EOF {
 			break
 		}
-		//log.Println(scanner.Text())
 		row := strings.Split(string(line), "\t")
 		matches := giRegex.FindStringSubmatch(row[1])
-		//fmt.Println(matches[1])
 		gi, _ := strconv.Atoi(matches[1])
 		m[gi] = row[0]
 	}
@@ -96,7 +84,6 @@ func giKEGG(filepath string) map[int]string {
 }
 
 func KEGGko(filepath string) map[string]int {
-	//defer wg.Done()
 	m := make(map[string]int)
 	file, err := os.Open(filepath)
 	if err != nil {
@@ -111,52 +98,50 @@ func KEGGko(filepath string) map[string]int {
 		if err == io.EOF {
 			break
 		}
-		//log.Println(scanner.Text())
 		row := strings.Split(string(line), "\t")
 
 		matches := koRegex.FindStringSubmatch(row[1])
-		//fmt.Println(matches[1])
 		ko, _ := strconv.Atoi(matches[1])
-		m[matches[0]] = ko
+		m[row[0]] = ko
 	}
 	return m
 }
 
 func main() {
+
+	start := time.Now()
+
 	flag.Parse()
 	nrpath := flag.Arg(0)
 	linker_keggGene2gi := flag.Arg(1)
 	linker_koKeggGene := flag.Arg(2)
 
-	//runtime.GOMAXPROCS(3)
-	//var wg sync.WaitGroup
-	//wg.Add(2)
-
-	giWP_map := giWP(nrpath)
-	//go giWP(nrpath)
+	giWPGI_map := giWPGI(nrpath)
 	giKEGG_map := giKEGG(linker_keggGene2gi)
-	//go giKEGG(linker_keggGene2gi)
 	KEGGko_map := KEGGko(linker_koKeggGene)
-	//go KEGGko(linker_koKeggGene)
 
-	//wg.Wait()
+	//Link 3 dicts (KEGGko::ko <- KEGG geneID) <-> (kegggi::KEGG geneID <- gi) <-> (giwp::gi <- WP_refseq's gi)
 
-	//Link 3 dicts (ko <- KEGG geneID) <-> (kegggi::KEGG geneID <- gi) <-> (giwp::gi <- WP_refseq)
-	keggWP_map := make(map[string]string)
-
+	keggGI_map := make(map[string]int)
 	for gi, geneID := range giKEGG_map {
-		WP := giWP_map[gi]
-		keggWP_map[geneID] = WP
+		//fmt.Printf("%s\t%d\n", geneID, giWPGI_map[gi])
+		if WPGI, ok := giWPGI_map[gi]; ok {
+			keggGI_map[geneID] = WPGI
+		}
 	}
 
-	wpKO_map := make(map[string]int)
+	wpgiKO_map := make(map[int]int)
 
 	for geneID, ko := range KEGGko_map {
-		WP := keggWP_map[geneID]
-		wpKO_map[WP] = ko
+		//fmt.Printf("%s\t%d\n", geneID, keggGI_map[geneID])
+		if gi, ok := keggGI_map[geneID]; ok {
+			wpgiKO_map[gi] = ko
+		}
 	}
+	for wpgi, ko := range wpgiKO_map {
+		fmt.Printf("%d\t%d\n", wpgi, ko)
+	}
+	elapsed := time.Since(start)
+	log.Printf("Binomial took %s", elapsed)
 
-	for wp, ko := range wpKO_map {
-		fmt.Printf("%s\t%s\n", wp, ko)
-	}
 }

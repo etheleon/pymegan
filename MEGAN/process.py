@@ -76,6 +76,10 @@ class Parser:
         """
         HISEQ:327:HN35KBCXX:2:1101:16910:2803/1; ;
         HISEQ:327:HN35KBCXX:2:1101:16768:6954/1; ; [1] K04079: 100 # 1
+        careful not all asignments are 1 to 1; maybe 1 query to multiple KOs.
+        Have not incorporated that.
+        Maybe some user flag to switch between taking the 1st KO (default) and double counting for the subsequent KOs, the default of MEGAN records up to 4 KOs
+        K00001|contig00030; ; [1] K00001: 50.0 [2] K00100: 50.0 # 2
         """
         print("Processing KOs....")
         totalReads = 0
@@ -98,7 +102,7 @@ class Parser:
                     self.reads[readID]['ko'] = ko
                 else:
                     self.reads[readID]['ko'] = '00000'
-        print("Total number of reads processed (ko): %s" % len(self.reads))
+        print("Total number of queries processed (ko): %s" % len(self.reads))
         return totalReads
 
     def __parseTAXA(self):
@@ -145,5 +149,5 @@ class Parser:
                     except IndexError:
                         break
                 self.reads[readID]['taxa'] = phylahash
-        print("Total number of reads processed (taxonomy): %s" % len(self.reads))
+        print("Total number of queries processed (taxonomy): %s" % len(self.reads))
         return totalReads
