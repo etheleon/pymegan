@@ -1,32 +1,24 @@
-# Python package for MEGAN CE
+# Python package for MEGAN CE using the blast2lca tool
 
-This is a collection of python classes for working with with MEGAN6 CE (v6.6.0)
-
-## NOTE
-
-At the time of writing, this package only works for the older version of NCBI’s database using GI.
+This is a collection of python classes for working with with MEGAN6 CE (v6.6.0). At the time of writing, this package only works for the older version of NCBI’s database using GI.
 
 ## Usage
 
-### parseMEGAN
+```
+fullPipeline --rootDir <rootDirectory> --sampleDir <sampleDirectory> --sampleName <sampleName> --inputFile <inputFile.daa/m8> --taxOutput <taxOutput> --koOutput <koOutput> --blast2lca <path to blast2lca tool>
+```
 
 `fullPipeline` processes meganised DAA files as input into a
 tabular output where each query (DIAMOND) is given its constituent KEGG and NCBI taxonomy assignment.
 
-### Directory structure
+#### required Directory structure
 
-### input
+#### input
 
 ```
 /root/directory
 └── sampleDirectory/
-     ├── KOoutput
-     ├── taxoutput
      └── inputFile.daa / inputFile.m8
-```
-
-```
-fullPipeline --rootDir <rootDirectory> --sampleDir <sampleDirectory> --sampleName <sampleName> --inputFile <inputFile.daa/m8> --taxOutput <taxOutput> --koOutput <koOutput> --blast2lca <path to blast2lca tool>
 ```
 
 #### Output
@@ -39,8 +31,11 @@ fullPipeline --rootDir <rootDirectory> --sampleDir <sampleDirectory> --sampleNam
      └── inputFile.daa / inputFile.m8
 ```
 
+## Others
 
-If you already have the outputs from blast2lca:
+### parseMEGAN
+
+If you already have the outputs from blast2lca, and you want to combine the annotations (ko and taxonomy for analysis)
 
 ```
 usage: parseMEGAN [-h] [--verbose] root sampledir sample taxonomy kegg
@@ -167,6 +162,12 @@ species 1262919 K00000  529
 ## gi2kegg / ref2kegg
 
 In the example below, only `gi|489223532|ref|WP_003131952.1|` will be displayed as the subject when you carry out alignment against the NR database, but in the linker files from KEGG link kegg genes to the sub GIs
+
+```
+K00001|contig00001      gi|489223532|ref|WP_003131952.1|        81.8    390     71      0       1202    33      1       390     1.4e-185        656.8
+```
+
+> above record is not accurate
 
 ```
 >gi|489223532|ref|WP_003131952.1| 30S ribosomal protein S18 [Lactococcus lactis]gi|15674171|ref|NP_268346.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. lactis Il1403]gi|116513137|ref|YP_812044.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris SK11]gi|125625229|ref|YP_001033712.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris MG1363]gi|281492845|ref|YP_003354825.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. lactis KF147]gi|385831755|ref|YP_005869568.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. lactis CV56]gi|385839508|ref|YP_005877138.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris A76]gi|389855617|ref|YP_006357861.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris NZ9000]gi|414075194|ref|YP_007000411.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris UC509.9]gi|459286377|ref|YP_007509482.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. lactis IO-1]gi|544395586|ref|YP_008569870.1| ribosomal protein S18 RpsR [Lactococcus lactis subsp. cremoris KW2]gi|554464728|ref|YP_008703967.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. lactis KLDS 4.0325]gi|13878750|sp|Q9CDN0.1|RS18_LACLA RecName: Full=30S ribosomal protein S18 [Lactococcus lactis subsp. lactis Il1403]gi|122939895|sp|Q02VU1.1|RS18_LACLS RecName: Full=30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris SK11]gi|166220956|sp|A2RNZ2.1|RS18_LACLM RecName: Full=30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris MG1363]gi|12725253|gb|AAK06287.1|AE006448_5 30S ribosomal protein S18 [Lactococcus lactis subsp. lactis Il1403]gi|116108791|gb|ABJ73931.1| SSU ribosomal protein S18P [Lactococcus lactis subsp. cremoris SK11]gi|124494037|emb|CAL99037.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris MG1363]gi|281376497|gb|ADA65983.1| SSU ribosomal protein S18P [Lactococcus lactis subsp. lactis KF147]gi|300072039|gb|ADJ61439.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris NZ9000]gi|326407763|gb|ADZ64834.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. lactis CV56]gi|354692797|gb|EHE92602.1| hypothetical protein LLCRE1631_01913 [Lactococcus lactis subsp. lactis CNCM I-1631]gi|358750736|gb|AEU41715.1| SSU ribosomal protein S18p [Lactococcus lactis subsp. cremoris A76]gi|374674265|dbj|BAL52156.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. lactis IO-1]gi|413975114|gb|AFW92578.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris UC509.9]gi|525225771|emb|CDG05746.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. lactis A12]gi|530789293|gb|EQC53187.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. lactis bv. diacetylactis str. TIFN4]gi|530789525|gb|EQC53393.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. lactis bv. diacetylactis str. TIFN2]gi|530791209|gb|EQC54683.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris TIFN6]gi|530793883|gb|EQC56744.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris TIFN5]gi|530859245|gb|EQC82878.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris TIFN7]gi|530868587|gb|EQC91162.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris TIFN1]gi|530872454|gb|EQC94448.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris TIFN3]gi|537110246|gb|ERE60813.1| 30S ribosomal protein S18 [Enterococcus gallinarum EGD-AAK12]gi|543873771|gb|AGV74185.1| ribosomal protein S18 RpsR [Lactococcus lactis subsp. cremoris KW2]gi|552065042|gb|AGY45032.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. lactis KLDS 4.0325]gi|554892214|gb|ESK79551.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. lactis bv. diacetylactis str. LD61]gi|666395058|gb|KEY61992.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. cremoris GE214]gi|669187288|gb|AII13743.1| 30S ribosomal protein S18 [Lactococcus lactis subsp. lactis NCDO 2118]
