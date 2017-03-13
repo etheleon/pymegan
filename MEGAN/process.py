@@ -18,7 +18,7 @@ class Parser:
         HISEQ:327:HN35KBCXX:2:1101:16768:6954/1; ; [1] K04079: 100 # 1
     """
 
-    def __init__ (self, rootPath, sampleDir, sampleName, kofile, taxfile, verbose):
+    def __init__ (self, rootPath, sampleDir, sampleName, taxfile,kofile, verbose = True):
         #sample details
         self.verbose = verbose
         self.rootPath   = rootPath
@@ -95,13 +95,16 @@ class Parser:
                 readID = elements.popleft()
                 elements.popleft()
                 data = elements.popleft()
+                #print(data)
                 found = bool(re.search("K(\d{5})", data))
                 if found:
                     ko = re.search("K(\d{5})", data).groups()[0]
                     self.kohash[ko] += 1
                     self.reads[readID]['ko'] = ko
+                    #print("readID: %s ko: %s" % (readID, ko))
                 else:
                     self.reads[readID]['ko'] = '00000'
+                    #print("readID: %s ko: K00000" % readID)
         print("Total number of queries processed (ko): %s" % len(self.reads))
         return totalReads
 
@@ -141,6 +144,7 @@ class Parser:
                                     if rank in ranks:
                                         phylahash[rank] = taxa
                                         self.taxonomyhash[taxa] += 1
+                                        #print("taxa: %s", taxa)
                             except (TypeError, ValueError) as err:
                                 print("%s: this is the errorneous entry: %s" % (err, assignment))
                         else:
@@ -149,5 +153,6 @@ class Parser:
                     except IndexError:
                         break
                 self.reads[readID]['taxa'] = phylahash
+                #print("readID %s", (readID))
         print("Total number of queries processed (taxonomy): %s" % len(self.reads))
         return totalReads

@@ -34,7 +34,7 @@ args = parser.parse_args()
     #"taxoutput3"#taxfile
 #)
 
-lcaparser = Parser(args.rootDir, args.sampleDir, args.sampleName, args.ko, args.tax, args.verbose)
+lcaparser = Parser(args.rootDir, args.sampleDir, args.sampleName, args.tax, args.ko, args.verbose)
 
 lcaparser.singleComparison()
 lcaparser.combined()
