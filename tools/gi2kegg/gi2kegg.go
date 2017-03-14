@@ -27,7 +27,7 @@ func giWPGI(nrpath string) map[int]int {
 	reader := bufio.NewReader(nr)
 	r, _ := regexp.Compile("gi\\|\\d+\\|ref\\|[^|]+")
 	for {
-		line, _, err := reader.ReadLine()
+		line, err := reader.ReadString('\n')
 		if err == io.EOF {
 			break
 		}
