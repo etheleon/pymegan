@@ -7,6 +7,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	//"reflect"
@@ -24,21 +25,16 @@ import (
 func accNRACC(nrpath string) map[string]string {
 	m := make(map[string]string)
 	//open file
-	nr, err := os.Open(nrpath)
+	log.Printf("Reading in: %s\n", nrpath)
+	p, err := ioutil.ReadFile(nrpath)
 	if err != nil {
+		// handle error
 		log.Fatal(err)
 	}
-	defer nr.Close()
-
-	reader := bufio.NewReader(nr)
-	r, _ := regexp.Compile("^>(\\S+) ")
-	childr, _ := regexp.Compile("^(\\S+)")
-	for {
-		linestr, err := reader.ReadString('\n')
-		line := []byte(linestr)
-		if err == io.EOF {
-			break
-		}
+	log.Println("Finished reading in: %s", nrpath)
+	for _, line := range bytes.Split(p, []byte{'\n'}) {
+		r, _ := regexp.Compile("^>(\\S+) ")
+		childr, _ := regexp.Compile("^(\\S+)")
 		isHeader, err := regexp.Match(">", line[:1])
 		if err != nil {
 			panic(err)
@@ -140,6 +136,7 @@ func main() {
 	//}
 
 	accNRACC_map := accNRACC(nrpath)
+	log.Println("Finished mapping NR")
 	accKEGG_map := accKEGG(linker_keggGene2acc)
 	KEGGko_map := KEGGko(linker_koKeggGene)
 
