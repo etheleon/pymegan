@@ -64,6 +64,26 @@ Accepts `.bz2` files
 	KOoutput.bz2
 ```
 
+
+#### input
+
+```
+/root/directory
+└── sampleDirectory/
+     ├── KOoutput
+     └── taxoutput
+```
+
+#### Output
+
+```
+/root/directory
+└── sampleDirectory/
+     ├── sampleName-combined.txt
+     ├── KOoutput
+     └── taxoutput
+```
+
 Each query may have multiple KEGG annotations (top 10% of subjects in a blastx query may be mapped to subject GIs mapping to multiple KOs). In this case the combination parser only takes we just the 1st KO
 
 ## Incorporating python class into your python script
