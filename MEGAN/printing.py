@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 
+import re
 import datetime
 from collections import defaultdict
+import logging
 import sys
+import pandas as pd
+
+logging.basicConfig(level=logging.INFO)
 
 class io:
     def __init__ (self, totalReads, rootDir, sampleName, sampleDir, readInfo, outputFile, verbose):
@@ -30,16 +35,30 @@ class io:
                 ('@ColorEdits'      , ''),
             ]
 
+    def Contig2LCAedgelist(self, altOutputfile = None):
+        logging.info("Writing Edgelist for LCA assignments: %s" % self.outfile)
+
+        readID_LCA_Map= {}
+        for readID in self.readInfo:
+            readID_LCA_Map[readID] = self.readInfo[readID]['minTaxa']
+        df = pd.DataFrame.from_dict(readID_LCA_Map, orient='index')
+        df.index.name = "readID"
+        df.reset_index(inplace=True)
+        df['readID'] = df['readID'].str.replace("\|", ":")
+        filename = altOutputfile if altOutputfile is not None else self.outfile
+        df.to_csv(filename, header=['contigid', 'taxid'], index=False)
+        return df
+
     def printMeganSummary(self):
-        print("Writing .megan summary file to output: %s" % self.outfile)
+        logging.info("Writing .megan summary file to output: %s" % self.outfile)
         with open("%s%s" % (self.outfile, ".megan"), 'w') as outfile:
-            print("Printing header...")
+            logging.info("Printing header...")
             for elem in self.heading:
                 line  = "%s\t%s" % (elem[0], elem[1])
                 outfile.write(line + "\n")
-            print("Printing taxa summary...")
+            logging.info("Printing taxa summary...")
             self.__summariseTaxa(outfile)
-            print("Printing KO summary...")
+            logging.info("Printing KO summary...")
             self.__summariseKO(outfile)
             outfile.write("END_OF_DATA_TABLE\n")
             outfile.write("#SampleID       @Source\n")

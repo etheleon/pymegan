@@ -2,7 +2,7 @@
 
 import logging
 import re
-import os
+#import os
 from collections import deque
 #import numpy
 import pandas as pd
@@ -33,8 +33,8 @@ class NodeEdge:
                 keggBIN = record.id.split("|")[0]
                 newRecordID = re.sub(r"\|", ":", record.id)
                 #print(newRecordID)
-                self.contigs[newRecordID] = keggBIN
-        contigDF = pd.DataFrame(self.contigs.items(), columns=['contig:string:contigid','bin:string:binid'])
+                self.contigs[newRecordID] = "ko:%s" % keggBIN
+        contigDF = pd.DataFrame(self.contigs.items(), columns=['contig:ID','bin'])
         contigDF['l:label'] = 'contigs'
         self.contigDF = contigDF
 
@@ -46,11 +46,7 @@ class NodeEdge:
         """
         logging.info("Processing KOs....")
         totalReads = 0
-        isBZ = bool(re.search(".bz2$", self.kofile))
-        if isBZ:
-            fh = bz2.BZ2File(self.kofile)
-        else:
-            fh = open(self.kofile, 'r')
+        fh = open(self.kofile, 'r')
         with fh as koFile:
             for line in koFile:
                 totalReads += 1
@@ -65,10 +61,10 @@ class NodeEdge:
                 if found:
                     ko = re.search("K(\d{5})", data).groups()[0]
                     #self.kohash[ko] += 1
-                    self.kohash[readID] = ko
+                    self.kohash[readID] = "ko:K%s" % ko.zfill(5)
                     #print("readID: %s ko: %s" % (readID, ko))
                 else:
-                    self.kohash[readID] = '00000'
+                    self.kohash[readID] = 'ko:K00000'
                     #print("readID: %s ko: K00000" % readID)
         #print("Total number of queries processed (ko): %s" % len(self.reads))
         return totalReads
@@ -80,13 +76,13 @@ class NodeEdge:
     def outputEdges(self, outputFile="contig.rels"):
         self.__parseAnnotation()
         logging.info("Writing edges to %s" % outputFile)
-        relsDF = pd.DataFrame(self.kohash.items(), columns=['contig:string:contigid', 'ko:string:koid'])
-        relsDF['type:string'] = 'assignment'
+        relsDF = pd.DataFrame(self.kohash.items(), columns=['contig:START_ID', 'ko:END_ID'])
+        relsDF['relationship:TYPE'] = 'assignment'
         relsDF.to_csv(outputFile, sep="\t", index=False)
 #outputs
 
 ## rels
-#contig:string:contigid  ko:string:koid  type:string
+#contig:ID  ko  type:string
 #K00001:contig00002      ko:K00001       assignment
 #K00001:contig00004      ko:K00001       assignment
 #K00001:contig00005      ko:K00001       assignment
@@ -98,7 +94,7 @@ class NodeEdge:
 #K00001:contig00015      ko:K00001       assignment
 
 ## Nodes
-#contig:string:contigid bin:string:binid l:label
+#contig:ID bin l:label
 #K00001:contig00002     ko:K00001      contigs
 #K00001:contig00004     ko:K00001      contigs
 #K00001:contig00005     ko:K00001      contigs

@@ -2,10 +2,15 @@
 
 import re
 import bz2
+import logging
 from collections import deque, defaultdict
+import numpy as np
 
-from printing import io
 
+from MEGAN.printing import io
+
+logging.basicConfig(level=logging.INFO, filename="logfile", filemode="a+",
+                    format="%(asctime)-15s %(levelname)-8s %(message)s")
 class Parser:
     """
     For processing BLAST2LCA outputs
@@ -25,11 +30,11 @@ class Parser:
         self.sampleName = sampleName
         self.sampleDir = sampleDir
         self.outputFile = "%s/%s/%s" % (rootPath, sampleDir, sampleName)
-        print("outputFile: %s" % self.outputFile)
+        logging.info("outputFile: %s" % self.outputFile)
         self.kofile     = "%s/%s/%s" % (rootPath, sampleDir, kofile)
-        print("kofile: %s" % self.kofile)
+        logging.info("kofile: %s" % self.kofile)
         self.taxfile    = "%s/%s/%s" % (rootPath, sampleDir, taxfile)
-        print("taxfile: %s" % self.taxfile)
+        logging.info("taxfile: %s" % self.taxfile)
         #data
         self.totalReads   = 0
         self.reads        = defaultdict(dict)
@@ -72,6 +77,31 @@ class Parser:
         )
         summary.printCombinedAnalysis()
 
+    def LCA2neo4j(self, outfile = None):
+        """
+        For neo4j
+
+        >>> rootDir = "/w/simulation_fr_the_beginning/reAssemble/everybodyelse/out/diamond/"
+        >>> sampleDir = ""
+        >>> tax = "newb29.allKOs.blast2lca.taxOutput"
+        >>> ko = "newb29.allKOs.blast2lca.koOutput"
+        >>> lcaparser = Parser(rootDir, sampleDir, "", tax, ko, False)
+        >>> lcaparser.LCA2neo4j("neo4j_contig_taxa_lca")
+        """
+        self.__justTaxa()
+        out = outfile if outfile is not None else self.outputFile
+        summary = io(
+            self.totalReads,
+            self.rootPath,
+            self.sampleName,
+            self.sampleDir,
+            self.reads,
+            out,
+            self.verbose
+        )
+        df = summary.Contig2LCAedgelist()
+        return df
+
     def __parseKO(self):
         """
         HISEQ:327:HN35KBCXX:2:1101:16910:2803/1; ;
@@ -110,7 +140,12 @@ class Parser:
 
     def __parseTAXA(self):
         """
+        __parseTaxa()
+
+        Parses the blast2lca outputs
+
         HISEQ:327:HN35KBCXX:2:1101:17405:2046/1; ;d__2; 100;p__976; 100;c__200643; 100;o__171549; 100;f__171552; 80;g__838; 80;s__1262917; 20;
+
         """
         print("Processing TAXA....")
         print("Only storing the following taxonomic ranks: Domain, Phylum, Class, Order, Family, Genus, Species")
@@ -139,7 +174,7 @@ class Parser:
                                 rank, taxa = assignment.split("__")
                                 score = int(elements.popleft())
                                 if score < 50 :
-                                    break #same, shouldn't break here, I should continue to assign but assign as unclassified
+                                    break
                                 else:
                                     if rank in ranks:
                                         phylahash[rank] = taxa
@@ -156,3 +191,64 @@ class Parser:
                 #print("readID %s", (readID))
         print("Total number of queries processed (taxonomy): %s" % len(self.reads))
         return totalReads
+
+    def __justTaxa(self, line = None):
+        """
+        justTaxa(line)
+
+        >>> lines = ["HISEQ:327:HN35KBCXX:2:1101:17405:2046/1; ;d__2; 100;p__976; 100;c__200643; 100;o__171549; 100;f__171552; 80;g__838; 80;s__1262917; 20;", "K00001|contig00060; ;d__2; 100;p__1224; 100;c__28216; 100;g__327159; 100;s__327160; 100;"]
+        >>> for line in lines:
+        >>>     justTaxa(line)
+        """
+        logging.info("Processing TAXA....")
+        logging.info("Only storing the following taxonomic ranks: Domain, Phylum, Class, Order, Family, Genus, Species")
+        ranks = ['d', 'p', 'c', 'o', 'f', 'g', 's']
+        totalReads = 0
+        isBZ = bool(re.search(".bz2$", self.taxfile))
+        if isBZ:
+            fh = bz2.BZ2File(self.taxfile)
+        else:
+            fh = open(self.taxfile, 'r')
+        with fh as taxFile:
+            queries = 0
+            for line in taxFile:
+                queries = queries + 1
+                phylahash = {}
+                elements    = deque(line.split(";"))
+                readID      = elements.popleft()
+                elements.popleft()
+                for rank in ranks:
+                    phylahash[rank] = 0 #default as unclassified
+                while elements:
+                    try:
+                        hasAssignment = len(elements) != 1
+                        if hasAssignment:
+                            try:
+                                assignment = elements.popleft()
+                                rank, taxa = assignment.split("__")
+                                score = int(elements.popleft())
+                                if score < 50: #any lower I'll be uncertain
+                                    break
+                                else:
+                                    if rank in ranks:
+                                        phylahash[rank] = taxa
+                                        self.taxonomyhash[taxa] += 1
+                                        logging.debug("taxa: " +taxa)
+                            except (TypeError, ValueError) as err:
+                                print("%s: this is the errorneous entry: %s" % (err, assignment))
+                        else:
+                            break
+                    except IndexError:
+                        break
+                noAssignment = True if np.sum([int(phylahash[ranks[i]]) for i in reversed(range(len(ranks)))]) == 0 else False
+                if noAssignment:
+                    logging.info("no assignment for this query: {} assigning to taxid:0 (unclassified)".format(readID))
+                    self.reads[readID]['minTaxa'] = 0
+                for index, taxid in enumerate([phylahash[ranks[i]] for i in reversed(range(len(ranks)))]):
+                    if taxid != 0:
+                        self.reads[readID]['minTaxa'] = taxid
+                        logging.debug("this is the min taxa {}".format(taxid))
+                        break
+                logging.debug("readID %s", (readID))
+        difference = queries - len(self.reads)
+        logging.info("#queries missed (taxonomy): {} check log file".format(difference))
