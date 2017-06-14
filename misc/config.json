@@ -1,0 +1,24 @@
+{
+    "fqFileDir":
+    {
+        "gDNA":
+        {
+            "directory":"./fq",
+            "lanes":[
+                ["s_1_1.filtered.fastq", "s_1_2.filtered.fastq"],
+                ["s_2_1.filtered.fastq", "s_2_2.filtered.fastq"]
+            ]
+        }
+    },
+    "annotationDir":
+    {
+        "gDNA":
+        {
+            "directory":"./annotations",
+            "lanes": [
+                ["s_1_1.filtered.ko.txt", "s_1_2.filtered.ko.txt"],
+                ["s_2_1.filtered.ko.txt", "s_2_2.filtered.ko.txt"]
+                ]
+            }
+    }
+}
