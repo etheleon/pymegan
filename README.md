@@ -1,5 +1,7 @@
 # Python package for MEGAN CE using the blast2lca tool
 
+![DOIzendoBadge](https://zenodo.org/badge/76442470.svg)
+
 This is a collection of python classes for working with with MEGAN6 CE (v6.6.0). At the time of writing, this package only works for the older version of NCBI’s database using GI.
 
 ## Usage
