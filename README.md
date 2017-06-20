@@ -33,6 +33,27 @@ tabular output where each query (DIAMOND) is given its constituent KEGG and NCBI
 
 ## Others
 
+### Docker
+
+Running the image like how you would a binary/executable
+to convert the m8 diamond outputs into KO and TAXID tables
+
+The image comes installed with MEGAN CE
+
+```
+WORKDIR=/path/2/your/workdir
+DIAMONDOUTPUT=/path/2/query.m8
+GI2TAXID=/export2/home/uesu/simulation_fr_the_beginning/data/classifier/gi2taxid.refseq.map
+GI2KEGG=/export2/home/uesu/github/MEGAN/tools/gi2kegg.map
+
+docker run --rm \
+   -v $WORKDIR:/data \
+   -v $DIAMONDOUTPUT:/data/diamond.m8 \
+   -v $GI2KEGG:/data/gi2kegg \
+   -v $GI2TAXID:/data/gi2taxid \
+    etheleon/blast2lca:latest
+```
+
 ### parseMEGAN
 
 If you already have the outputs from blast2lca, and you want to combine the annotations (ko and taxonomy for analysis)
