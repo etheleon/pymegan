@@ -5,7 +5,7 @@ from MEGAN.process import Parser
 import argparse
 
 class DAA2combined:
-    def __init__(self, rootDir, sampleDir, sampleName, inputFile, taxOutput, koOutput, blast2lca = '/export2/home/uesu/local/megan6ce/tools/blast2lca', gi2taxid  = '/export2/home/uesu/simulation_fr_the_beginning/data/classifier/gi2taxid.refseq.map', gi2kegg   = '/export2/home/uesu/github/MEGAN/tools/gi2kegg.map'):
+    def __init__(self, rootDir, sampleDir, sampleName, inputFile, taxOutput, koOutput, blast2lca = '/export2/home/uesu/local/megan6ce/tools/blast2lca', gi2taxid  = '/export2/home/uesu/simulation_fr_the_beginning/data/classifier/gi2taxid.refseq.map', gi2kegg   = '/export2/home/uesu/github/MEGAN/tools/gi2kegg.map', new=False):
         self.rootDir    = rootDir
         self.sampleDir  = sampleDir
         self.sampleName = sampleName
@@ -15,6 +15,7 @@ class DAA2combined:
         self.script     = blast2lca
         self.gi2taxid   = gi2taxid
         self.gi2kegg    = gi2kegg
+        self.new  = new
         self.run()
 
     def run(self):
@@ -43,6 +44,9 @@ if __name__ == '__main__':
 
     parser.add_argument('ko', metavar='kegg', type=str,
                         help='blast2lca ko output filename')
+
+    parser.add_argument('--new', dest='newNR', action='store_true',
+                        help='')
     parser.add_argument('--blast2lca', dest='script', default='/export2/home/uesu/local/megan6ce/tools/blast2lca',
                         help='blast2lca script')
     parser.add_argument('--gi2kegg', dest='gi2kegg', default='/export2/home/uesu/github/MEGAN/tools/gi2kegg.map',
@@ -53,5 +57,6 @@ if __name__ == '__main__':
                         help='debug mode')
     parser.add_argument('--verbose', dest='verbose', action='store_true',
                         help='to switch on verbose mode')
+
     args = parser.parse_args()
-    DAA2combined(args.rootDir, args.sampleDir, args.sampleName, args.input, args.tax, args.ko, args.script,args.gi2taxid, args.gi2kegg)
+    DAA2combined(args.rootDir, args.sampleDir, args.sampleName, args.input, args.tax, args.ko, args.script,args.gi2taxid, args.gi2kegg, args.newNR)

@@ -2,12 +2,12 @@
 
 ![DOIzendoBadge](https://zenodo.org/badge/76442470.svg)
 
-This is a collection of python classes for working with with MEGAN6 CE (v6.6.0). At the time of writing, this package only works for the older version of NCBI’s database using GI.
+This is a collection of python classes for working with with MEGAN6 CE (v6.6.0). Now supports both GI and acc
 
 ## Usage
 
 ```
-fullPipeline --rootDir <rootDirectory> --sampleDir <sampleDirectory> --sampleName <sampleName> --inputFile <inputFile.daa/m8> --taxOutput <taxOutput> --koOutput <koOutput> --blast2lca <path to blast2lca tool>
+fullPipeline <rootDirectory> <sampleDirectory> <sampleName> <inputFile.m8> <taxOutput> <koOutput> --blast2lca <path to blast2lca tool> --gi2kegg <gi2kegg or acc2kegg> --gi2taxid <gi2taxid of acc2taxid>
 ```
 
 `fullPipeline` processes meganised DAA files as input into a
