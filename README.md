@@ -42,6 +42,14 @@ to convert the m8 diamond outputs into KO and TAXID tables
 
 The image comes installed with MEGAN CE
 
+If you’re using the older NCBI NR database used the `nr_gi_0_1` tagged docker image.
+
+```
+docker pull etheleon/blast2lca:nr_gi_0_1
+```
+
+#### Example: Running the dockerised blast2lca executable
+
 ```
 WORKDIR=/path/2/your/workdir
 DIAMONDOUTPUT=/path/2/query.m8
@@ -53,8 +61,16 @@ docker run --rm \
    -v $DIAMONDOUTPUT:/data/diamond.m8 \
    -v $GI2KEGG:/data/gi2kegg \
    -v $GI2TAXID:/data/gi2taxid \
-    etheleon/blast2lca:latest
+    etheleon/blast2lca:nr_gi_0_1
 ```
+
+for the new acc based NCBI NR database use the `nr_acc_0_1` tagged docker image
+
+```
+docker pull etheleon/blast2lca:acc_gi_0_1
+```
+
+`$GI2TAXID` will point to the `acc2taxid` mapping file same for `$GI2KEGG`
 
 ### parseMEGAN
 

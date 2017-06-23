@@ -27,8 +27,6 @@
 #     etheleon/blast2lca:latest
 ################################################################
 
-# Build image with:  docker build -t krizsan/ubuntu1504java8:v1 .
- 
 FROM ubuntu:16.04
 MAINTAINER wesley goi <picy2k@gmail.com>
 
@@ -60,7 +58,4 @@ ENV PATH="/opt/conda/bin:${PATH}"
 
 VOLUME ["/data"]
 ENTRYPOINT ["/tmp/blast2lcaPlus/fullPipeline"]
-CMD ["/data", ".", "query", "diamond.m8", "taxOutput", "koOutput", "--blast2lca", "/opt/megan/tools/blast2lca", "--gi2kegg", "/data/gi2kegg", "--gi2taxid", "/data/gi2taxid"]
-
-#################### INSTALLATION ENDS ##############################
-MAINTAINER Wesley GOI <wesley@bic.nus.edu.sg>
+CMD ["/data", ".", "query", "diamond.m8", "taxOutput", "koOutput", "--blast2lca", "/opt/megan/tools/blast2lca", "--gi2kegg", "/data/gi2kegg", "--gi2taxid", "/data/gi2taxid", "--new"]

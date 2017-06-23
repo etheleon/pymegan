@@ -11,7 +11,6 @@ import argparse
 from Bio import SeqIO
 
 
-
 #This is experimental as this point in time for contigs based analyses only
 class NodeEdge:
     def __init__(self, root, sampleDir, fasta, taxOutput, koOutput):
