@@ -224,7 +224,7 @@ Mapping tool generators, in the `tools` folder of the blast2lcaPlus repo, you’
 2. gi2kegg
 3. ref2kegg
 
-The map generators are written in [golang](https://golang.org/), and the compiled versions are found in the `binaries` folder. 
+The map generators are written in [golang](https://golang.org/), and the compiled versions are found in the `binaries` folder. Although to be safe, its best to compile it on your own machine.  
 The `gi2kegg` binary is meant for older NR databases before September 2016 when genebank identifiers (GI) are still supported by NCBI
 
 The newer `ref2kegg` binary is meant for the newer NR databases after Sept 2016.
