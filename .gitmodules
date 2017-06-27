@@ -1,3 +1,3 @@
 [submodule "MEGAN/MEGAN6CE"]
 	path = MEGAN/MEGAN6CE
-	url = git@github.com:danielhuson/megan-ce.git
+	url = https://github.com/danielhuson/megan-ce.git
