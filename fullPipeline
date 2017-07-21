@@ -23,6 +23,7 @@ class DAA2combined:
         b2l.run(self.rootDir, self.sampleDir, self.inputFile, self.taxOutput, self.koOutput)
         lcaparser = Parser(self.rootDir, self.sampleDir, self.sampleName, self.taxOutput, self.koOutput)
         lcaparser.combined()
+        lcaparser.LCA2neo4j()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Command line wrapper of blast2lca and merging annotations')

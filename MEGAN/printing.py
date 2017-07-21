@@ -45,7 +45,7 @@ class io:
         df.index.name = "readID"
         df.reset_index(inplace=True)
         df['readID'] = df['readID'].str.replace("\|", ":")
-        filename = altOutputfile if altOutputfile is not None else self.outfile
+        filename = altOutputfile if altOutputfile is not None else "{}.rels".format(self.outfile)
         df.to_csv(filename, header=['contigid', 'taxid'], index=False)
         return df
 

@@ -5,7 +5,7 @@ import bz2
 import logging
 from collections import deque, defaultdict
 import numpy as np
-
+#import fire
 
 from MEGAN.printing import io
 
@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO, filename="logfile", filemode="a+",
                     format="%(asctime)-15s %(levelname)-8s %(message)s")
 class Parser:
     """
-    For processing BLAST2LCA outputs
+    For processing BLAST2LCA ko and taxonomy annotation outputs
 
     Allows one to parse via command line MEGAN tools blast2lca outputs:
     # Taxonomy
@@ -21,6 +21,18 @@ class Parser:
     # KO - KEGG
         HISEQ:327:HN35KBCXX:2:1101:16910:2803/1; ;
         HISEQ:327:HN35KBCXX:2:1101:16768:6954/1; ; [1] K04079: 100 # 1
+    Parameters:
+    -----------
+
+        rootPath: str
+            path to the root directory of the project
+        sampleDir: str
+            sample directory which should be below the root directory
+        sampleName: str
+            the name of the sample so that the output files will be named as such
+        taxfile: str
+            name of the taxonomy file should be sitting below the root
+        kofile: str
     """
 
     def __init__ (self, rootPath, sampleDir, sampleName, taxfile,kofile, verbose = True):
@@ -86,7 +98,7 @@ class Parser:
         >>> tax = "newb29.allKOs.blast2lca.taxOutput"
         >>> ko = "newb29.allKOs.blast2lca.koOutput"
         >>> lcaparser = Parser(rootDir, sampleDir, "", tax, ko, False)
-        >>> lcaparser.LCA2neo4j("neo4j_contig_taxa_lca")
+        >>> lcaparser.LCA2neo4j("neo4j_contig_taxa_lca_full")
         """
         self.__justTaxa()
         out = outfile if outfile is not None else self.outputFile
@@ -252,3 +264,7 @@ class Parser:
                 logging.debug("readID %s", (readID))
         difference = queries - len(self.reads)
         logging.info("#queries missed (taxonomy): {} check log file".format(difference))
+
+
+#if __name__ == '__main__':
+    #fire.Fire(Parser)
