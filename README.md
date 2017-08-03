@@ -1,6 +1,6 @@
 # Python package for MEGAN CE using the blast2lca tool
 
-![DOIzendoBadge](https://zenodo.org/badge/76442470.svg)
+[![DOIzendoBadge](https://zenodo.org/badge/76442470.svg)](https://zenodo.org/badge/latestdoi/76442470)
 
 This is a collection of python classes for working with with MEGAN6 CE (v6.6.0). Now supports both GI and acc
 
